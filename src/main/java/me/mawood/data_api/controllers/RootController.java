@@ -7,6 +7,7 @@ import me.mawood.data_api.objects.Response;
 import me.mawood.data_api.sqlAbstraction.SQLDataAccessor;
 import me.mawood.data_api.sqlAbstraction.SQLDataAccessorFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,12 +16,12 @@ public class RootController
 
     private static final SQLDataAccessor sql = SQLDataAccessorFactory.getInstance();
 
-    @RequestMapping("/")
+    @RequestMapping(value="/", method = RequestMethod.GET)
     public Message helloWorld() {
         return new Message("Hello World");
     }
 
-    @RequestMapping("/locations")
+    @RequestMapping(value="/locations", method = RequestMethod.GET)
     public Response locations()
     {
         try
@@ -32,7 +33,7 @@ public class RootController
         }
     }
 
-    @RequestMapping("/datatypes")
+    @RequestMapping(value="/datatypes", method = RequestMethod.GET)
     public Response datatypes()
     {
         try

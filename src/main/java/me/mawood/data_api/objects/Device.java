@@ -2,20 +2,21 @@ package me.mawood.data_api.objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class Location {
-  private Long locationid;
+public class Device
+{
+  private Long deviceid;
   private Long parentlocation;
   private String name;
   private String tag;
   private String description;
 
   @JsonIgnore
-  public Long getLocationid() {
-    return locationid;
+  public Long getDeviceid() {
+    return deviceid;
   }
 
-  public void setLocationid(Long locationid) {
-    this.locationid = locationid;
+  public void setDeviceid(Long deviceid) {
+    this.deviceid = deviceid;
   }
 
   public Long getParentlocation() {
@@ -53,8 +54,8 @@ public class Location {
     @Override
     public String toString()
     {
-        return "Location{" +
-                "locationid=" + locationid +
+        return "Device{" +
+                "deviceid=" + deviceid +
                 ", parentlocation=" + parentlocation +
                 ", name='" + name + '\'' +
                 ", tag='" + tag + '\'' +

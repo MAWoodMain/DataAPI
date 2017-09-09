@@ -1,11 +1,10 @@
 package me.mawood.data_api.sqlAbstraction;
 
 import me.mawood.data_api.objects.DataType;
-import me.mawood.data_api.objects.Location;
+import me.mawood.data_api.objects.Device;
 import me.mawood.data_api.objects.Reading;
 
 import java.sql.*;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -15,7 +14,7 @@ import java.util.Collection;
  */
 public class SQLDataAccessor
 {
-    private static final String LOCATION_TABLE_NAME = "location";
+    private static final String DEVICE_TABLE_NAME = "devices";
     private static final String DATATYPE_TABLE_NAME = "datatype";
     private static final String READING_TABLE_NAME = "readings";
 
@@ -27,24 +26,24 @@ public class SQLDataAccessor
                 "jdbc:mysql://" + hostname + ":" + port + "/" + dbName,username,password);
     }
 
-    public Collection<Location> getLocations() throws SQLException
+    public Collection<Device> getDevices() throws SQLException
     {
-        Collection<Location> locations = new ArrayList<>();
+        Collection<Device> devices = new ArrayList<>();
 
         Statement stmt=connection.createStatement();
-        ResultSet rs=stmt.executeQuery("select * from " + LOCATION_TABLE_NAME);
-        Location location;
+        ResultSet rs=stmt.executeQuery("select * from " + DEVICE_TABLE_NAME);
+        Device device;
         while (rs.next())
         {
-            location = new Location();
-            location.setLocationid(rs.getLong("locationid"));
-            location.setParentlocation(rs.getLong("parentlocation"));
-            location.setName(rs.getString("name"));
-            location.setTag(rs.getString("tag"));
-            location.setDescription(rs.getString("description"));
-            locations.add(location);
+            device = new Device();
+            device.setDeviceid(rs.getLong("deviceid"));
+            device.setParentlocation(rs.getLong("parentid"));
+            device.setName(rs.getString("name"));
+            device.setTag(rs.getString("tag"));
+            device.setDescription(rs.getString("description"));
+            devices.add(device);
         }
-        return locations;
+        return devices;
     }
 
     public Collection<DataType> getDataTypes() throws SQLException
@@ -68,20 +67,20 @@ public class SQLDataAccessor
     }
 
 
-    public Location getLocationFromTag(String locationTag) throws IllegalArgumentException, SQLException
+    public Device getDeviceFromTag(String locationTag) throws IllegalArgumentException, SQLException
     {
-        PreparedStatement query = connection.prepareStatement("select * from "+LOCATION_TABLE_NAME+" WHERE location.tag LIKE ?");
+        PreparedStatement query = connection.prepareStatement("select * from "+ DEVICE_TABLE_NAME +" WHERE devices.tag LIKE ?");
         query.setString(1, locationTag);
         ResultSet resultSet = query.executeQuery();
         if(resultSet.next())
         {
-            Location location = new Location();
-            location.setLocationid(resultSet.getLong("locationid"));
-            location.setParentlocation(resultSet.getLong("parentlocation"));
-            location.setName(resultSet.getString("name"));
-            location.setTag(resultSet.getString("tag"));
-            location.setDescription(resultSet.getString("description"));
-            return location;
+            Device device = new Device();
+            device.setDeviceid(resultSet.getLong("deviceid"));
+            device.setParentlocation(resultSet.getLong("parentid"));
+            device.setName(resultSet.getString("name"));
+            device.setTag(resultSet.getString("tag"));
+            device.setDescription(resultSet.getString("description"));
+            return device;
         }
         throw new IllegalArgumentException("Unknown tag '" + locationTag + "'");
     }
@@ -104,10 +103,10 @@ public class SQLDataAccessor
         throw new IllegalArgumentException("Unknown tag '" + dataTypeTag + "'");
     }
 
-    public Collection<Reading> getReadingsFor(Location location, DataType dataType, Long start, Long end) throws SQLException
+    public Collection<Reading> getReadingsFor(Device device, DataType dataType, Long start, Long end) throws SQLException
     {
-        PreparedStatement query = connection.prepareStatement("select * from "+READING_TABLE_NAME+" WHERE readings.locationid LIKE ? AND readings.datatypeid LIKE ?");
-        query.setLong(1, location.getLocationid());
+        PreparedStatement query = connection.prepareStatement("select * from "+READING_TABLE_NAME+" WHERE readings.deviceid LIKE ? AND readings.datatypeid LIKE ?");
+        query.setLong(1, device.getDeviceid());
         query.setLong(2, dataType.getDatatypeid());
         ResultSet resultSet = query.executeQuery();
         Collection<Reading> results = new ArrayList<>();
@@ -122,13 +121,13 @@ public class SQLDataAccessor
         return results;
     }
 
-    public int insertReadings(Location location, DataType dataType, Collection<Reading> readings) throws SQLException
+    public int insertReadings(Device device, DataType dataType, Collection<Reading> readings) throws SQLException
     {
-        PreparedStatement ps = connection.prepareStatement("INSERT INTO " + READING_TABLE_NAME + "(locationid, datatypeid, reading, timestamp) VALUES (?,?,?,?)");
+        PreparedStatement ps = connection.prepareStatement("INSERT INTO " + READING_TABLE_NAME + "(deviceid, datatypeid, reading, timestamp) VALUES (?,?,?,?)");
         for(Reading r:readings)
         {
             ps.clearParameters();
-            ps.setLong(1,location.getLocationid());
+            ps.setLong(1, device.getDeviceid());
             ps.setLong(2,dataType.getDatatypeid());
             ps.setDouble(3,r.getReading());
             ps.setTimestamp(4,r.getTimestamp());

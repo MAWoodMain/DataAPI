@@ -21,12 +21,12 @@ public class RootController
         return new Message("Hello World");
     }
 
-    @RequestMapping(value="/locations", method = RequestMethod.GET)
+    @RequestMapping(value="/devices", method = RequestMethod.GET)
     public Response locations()
     {
         try
         {
-            return new Response<>(sql.getLocations());
+            return new Response<>(sql.getDevices());
         } catch (SQLException e)
         {
             return new Response(false, "SQL error");

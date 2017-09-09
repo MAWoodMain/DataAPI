@@ -6,6 +6,8 @@ import me.mawood.data_api.objects.Reading;
 import me.mawood.data_api.objects.Response;
 import me.mawood.data_api.sqlAbstraction.SQLDataAccessor;
 import me.mawood.data_api.sqlAbstraction.SQLDataAccessorFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -22,10 +24,13 @@ public class DeviceController
 {
     private static final SQLDataAccessor sql = SQLDataAccessorFactory.getInstance();
 
+    private static final Log logger = LogFactory.getLog(DeviceController.class);
+
     @RequestMapping(value = "/{deviceTag}/{dataTypeTag}", method = RequestMethod.GET, produces = "application/json")
     public Response<Collection<Reading>> readingGet(@PathVariable String deviceTag, @PathVariable String dataTypeTag,
                                                  @RequestParam(value = "start", required=false) Long start, @RequestParam(value = "end", required=false) Long end)
     {
+        logger.info("Called: GET /device/"+deviceTag+"/"+dataTypeTag+"/");
         try
         {
             Device device = sql.getDeviceFromTag(deviceTag);
@@ -41,6 +46,7 @@ public class DeviceController
     public Response<String> readingPost(@PathVariable String deviceTag, @PathVariable String dataTypeTag,
                                         @RequestBody Collection<Reading> readings)
     {
+        logger.info("Called: POST /device/"+deviceTag+"/"+dataTypeTag+"/");
         try
         {
             Device device = sql.getDeviceFromTag(deviceTag);

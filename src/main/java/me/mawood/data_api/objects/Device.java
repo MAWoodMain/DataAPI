@@ -4,27 +4,39 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Device
 {
-  private Long deviceid;
-  private Long parentlocation;
+  private Long id;
+  private Long parentId;
   private String name;
   private String tag;
   private String description;
 
   @JsonIgnore
-  public Long getDeviceid() {
-    return deviceid;
+  public boolean isValid()
+  {
+      // required fields
+      if(name != null && name.length() > 25) return false;
+      if(tag != null && tag.length() > 25) return false;
+      // optional fields
+      if(description != null) if(description.length() > 255) return false;
+      return true;
   }
 
-  public void setDeviceid(Long deviceid) {
-    this.deviceid = deviceid;
+  @JsonIgnore
+  public Long getId() {
+    return id;
   }
 
-  public Long getParentlocation() {
-    return parentlocation;
+  public void setId(Long id) {
+    this.id = id;
   }
 
-  public void setParentlocation(Long parentlocation) {
-    this.parentlocation = parentlocation;
+  @JsonIgnore
+  public Long getParentId() {
+    return parentId;
+  }
+
+  public void setParentId(Long parentId) {
+    this.parentId = parentId;
   }
 
   public String getName() {
@@ -55,8 +67,8 @@ public class Device
     public String toString()
     {
         return "Device{" +
-                "deviceid=" + deviceid +
-                ", parentlocation=" + parentlocation +
+                "id=" + id +
+                ", parentId=" + parentId +
                 ", name='" + name + '\'' +
                 ", tag='" + tag + '\'' +
                 ", description='" + description + '\'' +

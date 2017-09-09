@@ -16,7 +16,7 @@ public class SQLDataAccessorFactory
     {
         if(sql == null) try
         {
-            sql = new SQLDataAccessor("localhost",3306,"data","root","P@ssw0rd");
+            sql = new SQLDataAccessor("localhost",3306,"data2","root","P@ssw0rd");
         } catch (ClassNotFoundException | SQLException e)
         {
             System.err.println("Could not connect to database error:");

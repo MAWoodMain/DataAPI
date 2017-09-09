@@ -10,6 +10,19 @@ public class DataType
   private String symbol;
   private String description;
 
+
+  @JsonIgnore
+  public boolean isValid()
+  {
+      // required fields
+      if(name != null && name.length() > 25) return false;
+      if(tag != null && tag.length() > 25) return false;
+      if(symbol != null && symbol.length() > 25) return false;
+      // optional fields
+      if(description != null) if(description.length() > 255) return false;
+      return true;
+  }
+
   @JsonIgnore
   public Long getDatatypeid() {
     return datatypeid;

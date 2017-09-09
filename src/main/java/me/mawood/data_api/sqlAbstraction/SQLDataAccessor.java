@@ -15,7 +15,7 @@ import java.util.Collection;
 public class SQLDataAccessor
 {
     private static final String DEVICE_TABLE_NAME = "devices";
-    private static final String DATATYPE_TABLE_NAME = "datatype";
+    private static final String DATATYPE_TABLE_NAME = "datatypes";
     private static final String READING_TABLE_NAME = "readings";
 
     private final Connection connection;
@@ -36,8 +36,8 @@ public class SQLDataAccessor
         while (rs.next())
         {
             device = new Device();
-            device.setDeviceid(rs.getLong("deviceid"));
-            device.setParentlocation(rs.getLong("parentid"));
+            device.setId(rs.getLong("id"));
+            device.setParentId(rs.getLong("parentId"));
             device.setName(rs.getString("name"));
             device.setTag(rs.getString("tag"));
             device.setDescription(rs.getString("description"));
@@ -56,7 +56,7 @@ public class SQLDataAccessor
         while (rs.next())
         {
             dataType = new DataType();
-            dataType.setDatatypeid(rs.getLong("datatypeid"));
+            dataType.setDatatypeid(rs.getLong("id"));
             dataType.setName(rs.getString("name"));
             dataType.setTag(rs.getString("tag"));
             dataType.setSymbol(rs.getString("symbol"));
@@ -75,38 +75,38 @@ public class SQLDataAccessor
         if(resultSet.next())
         {
             Device device = new Device();
-            device.setDeviceid(resultSet.getLong("deviceid"));
-            device.setParentlocation(resultSet.getLong("parentid"));
+            device.setId(resultSet.getLong("id"));
+            device.setParentId(resultSet.getLong("parentId"));
             device.setName(resultSet.getString("name"));
             device.setTag(resultSet.getString("tag"));
             device.setDescription(resultSet.getString("description"));
             return device;
         }
-        throw new IllegalArgumentException("Unknown tag '" + locationTag + "'");
+        throw new IllegalArgumentException("Unknown device tag '" + locationTag + "'");
     }
 
     public DataType getDataTypeFromTag(String dataTypeTag) throws IllegalArgumentException, SQLException
     {
-        PreparedStatement query = connection.prepareStatement("select * from "+DATATYPE_TABLE_NAME+" WHERE datatype.tag LIKE ?");
+        PreparedStatement query = connection.prepareStatement("select * from "+DATATYPE_TABLE_NAME+" WHERE datatypes.tag LIKE ?");
         query.setString(1, dataTypeTag);
         ResultSet resultSet = query.executeQuery();
         if(resultSet.next())
         {
             DataType dataType = new DataType();
-            dataType.setDatatypeid(resultSet.getLong("datatypeid"));
+            dataType.setDatatypeid(resultSet.getLong("id"));
             dataType.setName(resultSet.getString("name"));
             dataType.setTag(resultSet.getString("tag"));
             dataType.setSymbol(resultSet.getString("symbol"));
             dataType.setDescription(resultSet.getString("description"));
             return dataType;
         }
-        throw new IllegalArgumentException("Unknown tag '" + dataTypeTag + "'");
+        throw new IllegalArgumentException("Unknown data type tag '" + dataTypeTag + "'");
     }
 
     public Collection<Reading> getReadingsFor(Device device, DataType dataType, Long start, Long end) throws SQLException
     {
-        PreparedStatement query = connection.prepareStatement("select * from "+READING_TABLE_NAME+" WHERE readings.deviceid LIKE ? AND readings.datatypeid LIKE ?");
-        query.setLong(1, device.getDeviceid());
+        PreparedStatement query = connection.prepareStatement("select * from "+READING_TABLE_NAME+" WHERE readings.deviceId LIKE ? AND readings.dataTypeId LIKE ?");
+        query.setLong(1, device.getId());
         query.setLong(2, dataType.getDatatypeid());
         ResultSet resultSet = query.executeQuery();
         Collection<Reading> results = new ArrayList<>();
@@ -123,11 +123,11 @@ public class SQLDataAccessor
 
     public int insertReadings(Device device, DataType dataType, Collection<Reading> readings) throws SQLException
     {
-        PreparedStatement ps = connection.prepareStatement("INSERT INTO " + READING_TABLE_NAME + "(deviceid, datatypeid, reading, timestamp) VALUES (?,?,?,?)");
+        PreparedStatement ps = connection.prepareStatement("INSERT INTO " + READING_TABLE_NAME + "(deviceId, dataTypeId, reading, timestamp) VALUES (?,?,?,?)");
         for(Reading r:readings)
         {
             ps.clearParameters();
-            ps.setLong(1, device.getDeviceid());
+            ps.setLong(1, device.getId());
             ps.setLong(2,dataType.getDatatypeid());
             ps.setDouble(3,r.getReading());
             ps.setTimestamp(4,r.getTimestamp());
@@ -136,5 +136,26 @@ public class SQLDataAccessor
         int count = 0;
         for(int i:ps.executeBatch()) count+=i;
         return count;
+    }
+
+    public void addDevice(Device device) throws SQLException
+    {
+        if(!device.isValid()) throw new IllegalArgumentException("Invalid device parameters");
+        PreparedStatement ps = connection.prepareStatement("INSERT INTO " + DEVICE_TABLE_NAME + "(name, tag, description) VALUES (?,?,?)");
+        ps.setString(1,device.getName());
+        ps.setString(2,device.getTag());
+        ps.setString(3,device.getDescription());
+        ps.execute();
+    }
+
+    public void addDataType(DataType dataType) throws SQLException
+    {
+        if(!dataType.isValid()) throw new IllegalArgumentException("Invalid device parameters");
+        PreparedStatement ps = connection.prepareStatement("INSERT INTO " + DATATYPE_TABLE_NAME + "(name, tag, symbol, description) VALUES (?,?,?,?)");
+        ps.setString(1,dataType.getName());
+        ps.setString(2,dataType.getName());
+        ps.setString(3,dataType.getTag());
+        ps.setString(4,dataType.getDescription());
+        ps.execute();
     }
 }

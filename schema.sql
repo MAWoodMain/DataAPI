@@ -7,7 +7,7 @@ CREATE TABLE `devices` (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `dataTypes` (
+CREATE TABLE `datatypes` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` varchar(25) NOT NULL,
   `tag` varchar(25) NOT NULL,
@@ -29,4 +29,4 @@ ALTER TABLE `devices` ADD CONSTRAINT `devices_fk0` FOREIGN KEY (`parentId`) REFE
 
 ALTER TABLE `readings` ADD CONSTRAINT `readings_fk0` FOREIGN KEY (`deviceId`) REFERENCES `devices`(`id`);
 
-ALTER TABLE `readings` ADD CONSTRAINT `readings_fk1` FOREIGN KEY (`dataTypeId`) REFERENCES `dataTypes`(`id`);
+ALTER TABLE `readings` ADD CONSTRAINT `readings_fk1` FOREIGN KEY (`dataTypeId`) REFERENCES `datatypes`(`id`);

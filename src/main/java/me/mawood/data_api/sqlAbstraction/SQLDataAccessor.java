@@ -5,6 +5,7 @@ import me.mawood.data_api.objects.Device;
 import me.mawood.data_api.objects.Reading;
 
 import java.sql.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -105,10 +106,21 @@ public class SQLDataAccessor
 
     public Collection<Reading> getReadingsFor(Device device, DataType dataType, Long start, Long end) throws SQLException
     {
-        PreparedStatement query = connection.prepareStatement("select * from "+READING_TABLE_NAME+" WHERE readings.deviceId LIKE ? AND readings.dataTypeId LIKE ?");
-        query.setLong(1, device.getId());
-        query.setLong(2, dataType.getDatatypeid());
-        ResultSet resultSet = query.executeQuery();
+        String query = "select * from "+READING_TABLE_NAME+" WHERE (readings.deviceId LIKE ?) AND (readings.dataTypeId LIKE ?)";
+        if(start != null) query += " AND (readings.timestamp >= ?)";
+        if(end != null) query += " AND (readings.timestamp <= ?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setLong(1, device.getId());
+        statement.setLong(2, dataType.getDatatypeid());
+        if(start != null)
+        {
+            statement.setTimestamp(3,Timestamp.from(Instant.ofEpochMilli(start)));
+            if(end != null) statement.setTimestamp(4,Timestamp.from(Instant.ofEpochMilli(end)));
+        } else
+        {
+            if(end != null) statement.setTimestamp(3,Timestamp.from(Instant.ofEpochMilli(end)));
+        }
+        ResultSet resultSet = statement.executeQuery();
         Collection<Reading> results = new ArrayList<>();
         Reading reading;
         while (resultSet.next())

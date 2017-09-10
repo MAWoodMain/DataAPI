@@ -35,7 +35,7 @@ public class DataTypesController
             return new Response<>(sql.getDataTypes());
         } catch (SQLException e)
         {
-            System.err.println(e);
+            logger.error(e);
             return new Response(false, "SQL error");
         }
     }
@@ -50,7 +50,7 @@ public class DataTypesController
             return new Response(true,"Added data type successfully");
         } catch (SQLException e)
         {
-            System.err.println(e);
+            logger.error(e);
             return new Response(false, "SQL error");
         }
     }

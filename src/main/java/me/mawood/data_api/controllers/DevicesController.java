@@ -37,6 +37,7 @@ public class DevicesController
             return new Response<>(sql.getDevices());
         } catch (SQLException e)
         {
+            logger.error(e);
             return new Response(false, "SQL error");
         }
     }
@@ -51,6 +52,7 @@ public class DevicesController
             return new Response(true,"Added device successfully");
         } catch (SQLException e)
         {
+            logger.error(e);
             return new Response(false, "SQL error");
         }
     }

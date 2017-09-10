@@ -27,7 +27,7 @@ public class DeviceController
     private static final Log logger = LogFactory.getLog(DeviceController.class);
 
     @RequestMapping(value = "/{deviceTag}/{dataTypeTag}", method = RequestMethod.GET, produces = "application/json")
-    public Response<Collection<Reading>> readingGet(@PathVariable String deviceTag, @PathVariable String dataTypeTag,
+    public Response readingGet(@PathVariable String deviceTag, @PathVariable String dataTypeTag,
                                                  @RequestParam(value = "start", required=false) Long start, @RequestParam(value = "end", required=false) Long end)
     {
         logger.info("Called: GET /device/"+deviceTag+"/"+dataTypeTag+"/");
@@ -38,12 +38,13 @@ public class DeviceController
             return new Response<>(sql.getReadingsFor(device,dataType,start,end));
         } catch (Exception e)
         {
-            return new Response<>(e);
+            logger.error(e);
+            return new Response(false, "SQL error");
         }
     }
 
     @RequestMapping(value = "/{deviceTag}/{dataTypeTag}", method = RequestMethod.POST, produces = "application/json")
-    public Response<String> readingPost(@PathVariable String deviceTag, @PathVariable String dataTypeTag,
+    public Response readingPost(@PathVariable String deviceTag, @PathVariable String dataTypeTag,
                                         @RequestBody Collection<Reading> readings)
     {
         logger.info("Called: POST /device/"+deviceTag+"/"+dataTypeTag+"/");
@@ -55,7 +56,8 @@ public class DeviceController
             return new Response<>(true,"Done, inserted " + count + " readings of " + readings.size());
         } catch (SQLException e)
         {
-            return new Response<>(e);
+            logger.error(e);
+            return new Response(false, "SQL error");
         }
     }
 }

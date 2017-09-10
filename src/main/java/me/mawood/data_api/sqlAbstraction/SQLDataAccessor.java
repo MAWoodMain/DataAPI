@@ -153,8 +153,8 @@ public class SQLDataAccessor
         if(!dataType.isValid()) throw new IllegalArgumentException("Invalid device parameters");
         PreparedStatement ps = connection.prepareStatement("INSERT INTO " + DATATYPE_TABLE_NAME + "(name, tag, symbol, description) VALUES (?,?,?,?)");
         ps.setString(1,dataType.getName());
-        ps.setString(2,dataType.getName());
-        ps.setString(3,dataType.getTag());
+        ps.setString(2,dataType.getTag());
+        ps.setString(3,dataType.getSymbol());
         ps.setString(4,dataType.getDescription());
         ps.execute();
     }

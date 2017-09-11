@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 
 /**
@@ -27,29 +28,33 @@ public class DataTypesController
     private static final Log logger = LogFactory.getLog(DataTypesController.class);
 
     @RequestMapping(value="/", method = RequestMethod.GET)
-    public Response datatypes()
+    public Response datatypes(HttpServletResponse response)
     {
         logger.info("Called: GET /datatypes/");
         try
         {
+            response.setStatus(HttpServletResponse.SC_OK);
             return new Response<>(sql.getDataTypes());
         } catch (SQLException e)
         {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             logger.error(e);
             return new Response(false, "SQL error");
         }
     }
 
     @RequestMapping(value="/", method = {RequestMethod.PUT, RequestMethod.POST})
-    public Response insert(@RequestBody DataType dataType)
+    public Response insert(@RequestBody DataType dataType,HttpServletResponse response)
     {
         logger.info("Called: PUT/POST /devices/");
         try
         {
+            response.setStatus(HttpServletResponse.SC_OK);
             sql.addDataType(dataType);
             return new Response(true,"Added data type successfully");
         } catch (SQLException e)
         {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             logger.error(e);
             return new Response(false, "SQL error");
         }

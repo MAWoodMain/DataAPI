@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.Collection;
 
@@ -29,29 +30,33 @@ public class DevicesController
 
 
     @RequestMapping(value="/", method = RequestMethod.GET)
-    public Response get()
+    public Response get(HttpServletResponse response)
     {
         logger.info("Called: GET /devices/");
         try
         {
+            response.setStatus(HttpServletResponse.SC_OK);
             return new Response<>(sql.getDevices());
         } catch (SQLException e)
         {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             logger.error(e);
             return new Response(false, "SQL error");
         }
     }
 
     @RequestMapping(value="/", method = {RequestMethod.PUT, RequestMethod.POST})
-    public Response insert(@RequestBody Device device)
+    public Response insert(@RequestBody Device device, HttpServletResponse response)
     {
         logger.info("Called: PUT/POST /devices/");
         try
         {
+            response.setStatus(HttpServletResponse.SC_OK);
             sql.addDevice(device);
             return new Response(true,"Added device successfully");
         } catch (SQLException e)
         {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             logger.error(e);
             return new Response(false, "SQL error");
         }

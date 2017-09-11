@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 public class RootController
 {
@@ -18,7 +20,8 @@ public class RootController
     private static final SQLDataAccessor sql = SQLDataAccessorFactory.getInstance();
 
     @RequestMapping(value="/", method = RequestMethod.GET)
-    public Message helloWorld() {
+    public Message helloWorld(HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_OK);
         logger.info("Called: GET /");
         return new Message("Hello World");
     }

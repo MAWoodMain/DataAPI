@@ -1,4 +1,4 @@
-package me.mawood.data_api.controllers;
+package me.mawood.data_api;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

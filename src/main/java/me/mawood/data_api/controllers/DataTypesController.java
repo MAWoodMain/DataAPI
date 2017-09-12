@@ -1,10 +1,10 @@
 package me.mawood.data_api.controllers;
 
 import me.mawood.data_api.objects.DataType;
-import me.mawood.data_api.objects.Device;
 import me.mawood.data_api.objects.Response;
-import me.mawood.data_api.sqlAbstraction.SQLDataAccessor;
+import me.mawood.data_api.sqlAbstraction.AccessorType;
 import me.mawood.data_api.sqlAbstraction.SQLDataAccessorFactory;
+import me.mawood.data_api.sqlAbstraction.accessors.DataTypeAccessor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +24,7 @@ import java.sql.SQLException;
 @RequestMapping("/datatypes")
 public class DataTypesController
 {
-    private static final SQLDataAccessor sql = SQLDataAccessorFactory.getInstance();
+    private static final DataTypeAccessor dataTypeAccessor = (DataTypeAccessor)SQLDataAccessorFactory.getInstance(AccessorType.DATA_TYPE);
     private static final Log logger = LogFactory.getLog(DataTypesController.class);
 
     @RequestMapping(value="/", method = RequestMethod.GET)
@@ -34,7 +34,7 @@ public class DataTypesController
         try
         {
             response.setStatus(HttpServletResponse.SC_OK);
-            return new Response<>(sql.getDataTypes());
+            return new Response<>(dataTypeAccessor.getDataTypes());
         } catch (SQLException e)
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -50,7 +50,7 @@ public class DataTypesController
         try
         {
             response.setStatus(HttpServletResponse.SC_OK);
-            sql.addDataType(dataType);
+            dataTypeAccessor.addDataType(dataType);
             return new Response(true,"Added data type successfully");
         } catch (SQLException e)
         {

@@ -4,11 +4,13 @@ import me.mawood.data_api.objects.DataType;
 import me.mawood.data_api.objects.Device;
 import me.mawood.data_api.objects.Reading;
 import me.mawood.data_api.objects.Response;
-import me.mawood.data_api.sqlAbstraction.SQLDataAccessor;
+import me.mawood.data_api.sqlAbstraction.AccessorType;
 import me.mawood.data_api.sqlAbstraction.SQLDataAccessorFactory;
+import me.mawood.data_api.sqlAbstraction.accessors.DataTypeAccessor;
+import me.mawood.data_api.sqlAbstraction.accessors.DeviceAccessor;
+import me.mawood.data_api.sqlAbstraction.accessors.ReadingAccessor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +26,9 @@ import java.util.Collection;
 @RequestMapping("/device")
 public class DeviceController
 {
-    private static final SQLDataAccessor sql = SQLDataAccessorFactory.getInstance();
+    private static final DeviceAccessor deviceAccessor = (DeviceAccessor)SQLDataAccessorFactory.getInstance(AccessorType.DEVICE);
+    private static final DataTypeAccessor dataTypeAccessor = (DataTypeAccessor)SQLDataAccessorFactory.getInstance(AccessorType.DATA_TYPE);
+    private static final ReadingAccessor readingAccessor = (ReadingAccessor)SQLDataAccessorFactory.getInstance(AccessorType.READING);
 
     private static final Log logger = LogFactory.getLog(DeviceController.class);
 
@@ -38,9 +42,9 @@ public class DeviceController
         try
         {
             response.setStatus(HttpServletResponse.SC_OK);
-            Device device = sql.getDeviceFromTag(deviceTag);
-            DataType dataType = sql.getDataTypeFromTag(dataTypeTag);
-            return new Response<>(sql.getReadingsFor(device,dataType,start,end));
+            Device device = deviceAccessor.getDeviceFromTag(deviceTag);
+            DataType dataType = dataTypeAccessor.getDataTypeFromTag(dataTypeTag);
+            return new Response<>(readingAccessor.getReadingsFor(device,dataType,start,end));
         } catch (Exception e)
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -58,9 +62,9 @@ public class DeviceController
         try
         {
             response.setStatus(HttpServletResponse.SC_OK);
-            Device device = sql.getDeviceFromTag(deviceTag);
-            DataType dataType = sql.getDataTypeFromTag(dataTypeTag);
-            int count = sql.insertReadings(device,dataType,readings);
+            Device device = deviceAccessor.getDeviceFromTag(deviceTag);
+            DataType dataType = dataTypeAccessor.getDataTypeFromTag(dataTypeTag);
+            int count = readingAccessor.insertReadings(device,dataType,readings);
             return new Response<>(true,"Done, inserted " + count + " readings of " + readings.size());
         } catch (SQLException e)
         {

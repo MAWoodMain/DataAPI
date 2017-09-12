@@ -1,9 +1,14 @@
 package me.mawood.data_api.sqlAbstraction;
 
 import me.mawood.data_api.sqlAbstraction.SQLDataAccessor;
+import me.mawood.data_api.sqlAbstraction.accessors.DataTypeAccessor;
+import me.mawood.data_api.sqlAbstraction.accessors.DeviceAccessor;
+import me.mawood.data_api.sqlAbstraction.accessors.ReadingAccessor;
 
 import java.io.*;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -13,43 +18,34 @@ import java.util.Properties;
 public class SQLDataAccessorFactory
 {
     private static SQLDataAccessor sql = null;
-    private static String hostname;
-    private static int port;
-    private static String database;
-    private static String username;
-    private static String password;
-    static
+
+    private static final Map<AccessorType,SQLDataAccessor> accessors = new HashMap<>();
+
+
+    public static SQLDataAccessor getInstance(AccessorType type)
     {
-        Properties prop = new Properties();
-        try
-        {
-            InputStream input = new FileInputStream("sql.config");
-            prop.load(input);
+        if(!accessors.containsKey(type)) create(type);
+        return accessors.get(type);
 
-        } catch (IOException e)
-        {
-            System.err.println("Failed to open config file");
-            System.exit(-1);
-
-        }
-        hostname = prop.getProperty("hostname");
-        port = Integer.parseInt(prop.getProperty("port"));
-        database = prop.getProperty("database");
-        username = prop.getProperty("username");
-        password = prop.getProperty("password");
     }
 
-    public static SQLDataAccessor getInstance()
+    private static void create(AccessorType type)
     {
-        if(sql == null) try
+        if(accessors.containsKey(type)) return;
+
+        switch (type)
         {
-            sql = new SQLDataAccessor(hostname,port,database,username,password);
-        } catch (ClassNotFoundException | SQLException e)
-        {
-            System.err.println("Could not connect to database error:");
-            System.err.println(e.getMessage());
-            System.exit(-1);
+            case DATA_TYPE:
+                accessors.put(type,new DataTypeAccessor());
+                break;
+            case DEVICE:
+                accessors.put(type,new DeviceAccessor());
+                break;
+            case READING:
+                accessors.put(type,new ReadingAccessor());
+                break;
+            default:
+                throw new UnsupportedOperationException("Unsupported accessor type '" + type.name() + "'");
         }
-        return sql;
     }
 }

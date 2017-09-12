@@ -1,10 +1,10 @@
 package me.mawood.data_api.controllers;
 
 import me.mawood.data_api.objects.Device;
-import me.mawood.data_api.objects.Reading;
 import me.mawood.data_api.objects.Response;
-import me.mawood.data_api.sqlAbstraction.SQLDataAccessor;
+import me.mawood.data_api.sqlAbstraction.AccessorType;
 import me.mawood.data_api.sqlAbstraction.SQLDataAccessorFactory;
+import me.mawood.data_api.sqlAbstraction.accessors.DeviceAccessor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
-import java.util.Collection;
 
 /**
  * data_api
@@ -25,7 +24,7 @@ import java.util.Collection;
 @RequestMapping("/devices")
 public class DevicesController
 {
-    private static final SQLDataAccessor sql = SQLDataAccessorFactory.getInstance();
+    private static final DeviceAccessor deviceAccessor = (DeviceAccessor)SQLDataAccessorFactory.getInstance(AccessorType.DEVICE);
     private static final Log logger = LogFactory.getLog(DevicesController.class);
 
 
@@ -36,7 +35,7 @@ public class DevicesController
         try
         {
             response.setStatus(HttpServletResponse.SC_OK);
-            return new Response<>(sql.getDevices());
+            return new Response<>(deviceAccessor.getDevices());
         } catch (SQLException e)
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -52,7 +51,7 @@ public class DevicesController
         try
         {
             response.setStatus(HttpServletResponse.SC_OK);
-            sql.addDevice(device);
+            deviceAccessor.addDevice(device);
             return new Response(true,"Added device successfully");
         } catch (SQLException e)
         {

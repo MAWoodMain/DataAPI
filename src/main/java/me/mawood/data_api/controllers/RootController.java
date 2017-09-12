@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 public class RootController
 {
     private static final Log logger = LogFactory.getLog(RootController.class);
-    private static final SQLDataAccessor sql = SQLDataAccessorFactory.getInstance();
 
     @RequestMapping(value="/", method = RequestMethod.GET)
     public Message helloWorld(HttpServletResponse response) {

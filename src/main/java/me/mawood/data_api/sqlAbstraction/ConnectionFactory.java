@@ -59,7 +59,7 @@ class ConnectionFactory
                 attempts++;
                 Class.forName("com.mysql.jdbc.Driver");
                 connection = DriverManager.getConnection(
-                        "jdbc:mysql://" + hostname + ":" + port + "/" + database,username,password);
+                        "jdbc:mysql://" + hostname + ":" + port + "/" + database + "?useSSL=false",username,password);
             } catch (SQLException | ClassNotFoundException e)
             {
                 if (attempts > 20)

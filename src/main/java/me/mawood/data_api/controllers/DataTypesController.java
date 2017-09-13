@@ -29,7 +29,7 @@ public class DataTypesController
     @RequestMapping(value="/", method = RequestMethod.GET)
     public Response datatypes(HttpServletResponse response)
     {
-        logger.info("Called: GET /datatypes/");
+        logger.debug("Called: GET /datatypes/");
         try
         {
             response.setStatus(HttpServletResponse.SC_OK);
@@ -45,7 +45,7 @@ public class DataTypesController
     @RequestMapping(value="/", method = {RequestMethod.PUT, RequestMethod.POST})
     public Response insert(@RequestBody DataType dataType,HttpServletResponse response)
     {
-        logger.info("Called: PUT/POST /devices/");
+        logger.debug("Called: PUT/POST /devices/");
         try
         {
             response.setStatus(HttpServletResponse.SC_OK);
@@ -62,7 +62,7 @@ public class DataTypesController
     @RequestMapping(value="/{dataTypeTag}", method = {RequestMethod.DELETE})
     public Response delete(@PathVariable String dataTypeTag, HttpServletResponse response)
     {
-        logger.info("Called: DELETE /datatypes/");
+        logger.debug("Called: DELETE /datatypes/");
         try
         {
             DataType dataType = dataTypeAccessor.getDataTypeFromTag(dataTypeTag);

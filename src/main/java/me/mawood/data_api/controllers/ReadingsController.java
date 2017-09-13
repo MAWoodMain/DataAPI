@@ -41,7 +41,7 @@ public class ReadingsController
                                @RequestParam(value = "start", required=false) Long start, @RequestParam(value = "end", required=false) Long end,
                                HttpServletResponse response)
     {
-        logger.info("Called: GET /device/"+deviceTag+"/"+dataTypeTag+"/");
+        logger.debug("Called: GET /device/"+deviceTag+"/"+dataTypeTag+"/");
         try
         {
             response.setStatus(HttpServletResponse.SC_OK);
@@ -63,7 +63,7 @@ public class ReadingsController
                                 @RequestBody Reading[] readings,
                                 HttpServletResponse response)
     {
-        logger.info("Called: POST /device/"+deviceTag+"/"+dataTypeTag+"/");
+        logger.debug("Called: POST /device/"+deviceTag+"/"+dataTypeTag+"/");
         try
         {
             response.setStatus(HttpServletResponse.SC_OK);
@@ -85,7 +85,7 @@ public class ReadingsController
                                @RequestParam(value = "start") Long start, @RequestParam(value = "end") Long end,
                                HttpServletResponse response)
     {
-        logger.info("Called: DELETE /device/"+deviceTag+"/"+dataTypeTag+"/");
+        logger.debug("Called: DELETE /device/"+deviceTag+"/"+dataTypeTag+"/");
         try
         {
             response.setStatus(HttpServletResponse.SC_OK);

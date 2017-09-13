@@ -30,7 +30,7 @@ public class DevicesController
     @RequestMapping(value="/", method = RequestMethod.GET)
     public Response get(HttpServletResponse response)
     {
-        logger.info("Called: GET /devices/");
+        logger.debug("Called: GET /devices/");
         try
         {
             response.setStatus(HttpServletResponse.SC_OK);
@@ -46,7 +46,7 @@ public class DevicesController
     @RequestMapping(value="/", method = {RequestMethod.PUT, RequestMethod.POST})
     public Response insert(@RequestBody Device device, HttpServletResponse response)
     {
-        logger.info("Called: PUT/POST /devices/");
+        logger.debug("Called: PUT/POST /devices/");
         try
         {
             response.setStatus(HttpServletResponse.SC_OK);
@@ -63,7 +63,7 @@ public class DevicesController
     @RequestMapping(value="/{deviceTag}", method = {RequestMethod.DELETE})
     public Response delete(@PathVariable String deviceTag, HttpServletResponse response)
     {
-        logger.info("Called: DELETE /devices/");
+        logger.debug("Called: DELETE /devices/");
         try
         {
             Device device = deviceAccessor.getDeviceFromTag(deviceTag);

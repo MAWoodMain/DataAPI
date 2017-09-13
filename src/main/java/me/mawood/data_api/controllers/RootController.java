@@ -21,7 +21,7 @@ public class RootController
     @ApiOperation(value = "Hello World method", notes = "Includes a timestamp and a hello world message")
     public Message helloWorld(HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_OK);
-        logger.info("Called: GET /");
+        logger.debug("Called: GET /");
         return new Message("Hello World");
     }
 }

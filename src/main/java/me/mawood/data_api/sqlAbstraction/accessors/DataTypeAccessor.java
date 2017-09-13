@@ -67,4 +67,12 @@ public class DataTypeAccessor extends SQLDataAccessor
         ps.setString(4,dataType.getDescription());
         ps.execute();
     }
+
+    public void delete(DataType dataType) throws SQLException
+    {
+        if(!dataType.isValid()) throw new IllegalArgumentException("Invalid device parameters");
+        PreparedStatement ps = connection.prepareStatement("DELETE FROM " + DATATYPE_TABLE_NAME + " WHERE datatypes.tag LIKE ?");
+        ps.setString(1,dataType.getTag());
+        ps.execute();
+    }
 }

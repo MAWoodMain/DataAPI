@@ -1,16 +1,14 @@
 package me.mawood.data_api.controllers;
 
 import me.mawood.data_api.objects.DataType;
+import me.mawood.data_api.objects.Device;
 import me.mawood.data_api.objects.Response;
 import me.mawood.data_api.sqlAbstraction.AccessorType;
 import me.mawood.data_api.sqlAbstraction.SQLDataAccessorFactory;
 import me.mawood.data_api.sqlAbstraction.accessors.DataTypeAccessor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
@@ -57,6 +55,28 @@ public class DataTypesController
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             logger.error(e);
             return new Response(false, "SQL error");
+        }
+    }
+
+    @RequestMapping(value="/{dataTypeTag}", method = {RequestMethod.DELETE})
+    public Response delete(@PathVariable String dataTypeTag, HttpServletResponse response)
+    {
+        logger.info("Called: DELETE /devices/");
+        try
+        {
+            DataType dataType = dataTypeAccessor.getDataTypeFromTag(dataTypeTag);
+            dataTypeAccessor.delete(dataType);
+            return new Response(true,"Deleted data type successfully");
+        } catch (SQLException e)
+        {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error(e);
+            return new Response(false, "SQL error");
+        } catch (IllegalArgumentException e)
+        {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error(e);
+            return new Response(false, e.getMessage());
         }
     }
 }

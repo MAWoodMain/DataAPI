@@ -26,7 +26,7 @@ public class DeviceAccessor extends SQLDataAccessor
         Collection<Device> devices = new ArrayList<>();
 
         Statement stmt=connection.createStatement();
-        ResultSet rs=stmt.executeQuery("select * from " + DEVICE_TABLE_NAME);
+        ResultSet rs=stmt.executeQuery("SELECT * FROM " + DEVICE_TABLE_NAME);
         Device device;
         while (rs.next())
         {
@@ -44,7 +44,7 @@ public class DeviceAccessor extends SQLDataAccessor
 
     public Device getDeviceFromTag(String locationTag) throws IllegalArgumentException, SQLException
     {
-        PreparedStatement query = connection.prepareStatement("select * from "+ DEVICE_TABLE_NAME +" WHERE devices.tag LIKE ?");
+        PreparedStatement query = connection.prepareStatement("SELECT * FROM "+ DEVICE_TABLE_NAME +" WHERE devices.tag LIKE ?");
         query.setString(1, locationTag);
         ResultSet resultSet = query.executeQuery();
         if(resultSet.next())
@@ -67,6 +67,14 @@ public class DeviceAccessor extends SQLDataAccessor
         ps.setString(1,device.getName());
         ps.setString(2,device.getTag());
         ps.setString(3,device.getDescription());
+        ps.execute();
+    }
+
+    public void delete(Device device) throws SQLException
+    {
+        if(!device.isValid()) throw new IllegalArgumentException("Invalid device parameters");
+        PreparedStatement ps = connection.prepareStatement("DELETE FROM " + DEVICE_TABLE_NAME + " WHERE devices.tag LIKE ?");
+        ps.setString(1,device.getTag());
         ps.execute();
     }
 }

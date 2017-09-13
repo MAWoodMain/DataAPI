@@ -24,13 +24,13 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/device")
-public class DeviceController
+public class ReadingsController
 {
     private static final DeviceAccessor deviceAccessor = (DeviceAccessor)SQLDataAccessorFactory.getInstance(AccessorType.DEVICE);
     private static final DataTypeAccessor dataTypeAccessor = (DataTypeAccessor)SQLDataAccessorFactory.getInstance(AccessorType.DATA_TYPE);
     private static final ReadingAccessor readingAccessor = (ReadingAccessor)SQLDataAccessorFactory.getInstance(AccessorType.READING);
 
-    private static final Log logger = LogFactory.getLog(DeviceController.class);
+    private static final Log logger = LogFactory.getLog(ReadingsController.class);
 
     @RequestMapping(value = "/{deviceTag}/{dataTypeTag}", method = RequestMethod.GET, produces = "application/json")
     public Response readingGet(@PathVariable String deviceTag, @PathVariable String dataTypeTag,

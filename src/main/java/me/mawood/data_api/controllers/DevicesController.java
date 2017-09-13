@@ -7,10 +7,7 @@ import me.mawood.data_api.sqlAbstraction.SQLDataAccessorFactory;
 import me.mawood.data_api.sqlAbstraction.accessors.DeviceAccessor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
@@ -58,6 +55,28 @@ public class DevicesController
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             logger.error(e);
             return new Response(false, "SQL error");
+        }
+    }
+
+    @RequestMapping(value="/{deviceTag}", method = {RequestMethod.DELETE})
+    public Response delete(@PathVariable String deviceTag, HttpServletResponse response)
+    {
+        logger.info("Called: DELETE /devices/");
+        try
+        {
+            Device device = deviceAccessor.getDeviceFromTag(deviceTag);
+            deviceAccessor.delete(device);
+            return new Response(true,"Deleted device successfully");
+        } catch (SQLException e)
+        {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error(e);
+            return new Response(false, "SQL error");
+        } catch (IllegalArgumentException e)
+        {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error(e);
+            return new Response(false, e.getMessage());
         }
     }
 

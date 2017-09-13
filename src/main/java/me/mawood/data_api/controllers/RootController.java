@@ -1,5 +1,6 @@
 package me.mawood.data_api.controllers;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import me.mawood.data_api.objects.Message;
 import org.apache.commons.logging.Log;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
+@Api(tags = "Root")
 @RestController
 public class RootController
 {

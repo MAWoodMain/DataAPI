@@ -1,5 +1,6 @@
 package me.mawood.data_api.controllers;
 
+import io.swagger.annotations.Api;
 import me.mawood.data_api.objects.Device;
 import me.mawood.data_api.objects.Response;
 import me.mawood.data_api.sqlAbstraction.AccessorType;
@@ -18,6 +19,7 @@ import java.sql.SQLException;
  */
 
 @RestController
+@Api(tags = "Devices")
 @RequestMapping("/devices")
 public class DevicesController
 {

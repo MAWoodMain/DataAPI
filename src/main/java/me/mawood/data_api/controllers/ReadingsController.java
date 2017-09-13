@@ -1,5 +1,6 @@
 package me.mawood.data_api.controllers;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import me.mawood.data_api.objects.DataType;
 import me.mawood.data_api.objects.Device;
@@ -24,6 +25,7 @@ import java.util.Collection;
  */
 
 @RestController
+@Api(tags = "Readings")
 @RequestMapping("/device")
 public class ReadingsController
 {

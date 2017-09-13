@@ -20,6 +20,7 @@ import java.util.Collection;
 public class ReadingAccessor extends SQLDataAccessor
 {
 
+
     public ReadingAccessor()
     {
         super();
@@ -69,5 +70,16 @@ public class ReadingAccessor extends SQLDataAccessor
         int count = 0;
         for(int i:ps.executeBatch()) count+=i;
         return count;
+    }
+
+    public int deleteReadings(Device device, DataType dataType, Long start, Long end) throws SQLException
+    {
+        PreparedStatement ps = connection.prepareStatement("DELETE from "+READING_TABLE_NAME+" WHERE (readings.deviceId LIKE ?) AND (readings.dataTypeId LIKE ?) AND (readings.timestamp >= ?) AND (readings.timestamp <= ?)");
+        ps.setLong(1, device.getId());
+        ps.setLong(2, dataType.getDatatypeid());
+        ps.setTimestamp(3, Timestamp.from(Instant.ofEpochMilli(start)));
+        ps.setTimestamp(4,Timestamp.from(Instant.ofEpochMilli(end)));
+        ps.execute();
+        return ps.getUpdateCount();
     }
 }

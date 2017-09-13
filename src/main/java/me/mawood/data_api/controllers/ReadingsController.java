@@ -37,7 +37,6 @@ public class ReadingsController
                                @RequestParam(value = "start", required=false) Long start, @RequestParam(value = "end", required=false) Long end,
                                HttpServletResponse response)
     {
-
         logger.info("Called: GET /device/"+deviceTag+"/"+dataTypeTag+"/");
         try
         {
@@ -67,6 +66,27 @@ public class ReadingsController
             int count = readingAccessor.insertReadings(device,dataType,readings);
             return new Response<>(true,"Done, inserted " + count + " readings of " + readings.size());
         } catch (SQLException e)
+        {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error(e);
+            return new Response(false, "SQL error");
+        }
+    }
+
+    @RequestMapping(value = "/{deviceTag}/{dataTypeTag}", method = RequestMethod.DELETE, produces = "application/json")
+    public Response readingDelete(@PathVariable String deviceTag, @PathVariable String dataTypeTag,
+                               @RequestParam(value = "start") Long start, @RequestParam(value = "end") Long end,
+                               HttpServletResponse response)
+    {
+        logger.info("Called: DELETE /device/"+deviceTag+"/"+dataTypeTag+"/");
+        try
+        {
+            response.setStatus(HttpServletResponse.SC_OK);
+            Device device = deviceAccessor.getDeviceFromTag(deviceTag);
+            DataType dataType = dataTypeAccessor.getDataTypeFromTag(dataTypeTag);
+            int count = readingAccessor.deleteReadings(device,dataType,start,end);
+            return new Response<>(true,"Done, deleted " + count);
+        } catch (Exception e)
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             logger.error(e);

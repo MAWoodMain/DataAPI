@@ -1,7 +1,6 @@
 package me.mawood.data_api.controllers;
 
 import me.mawood.data_api.objects.DataType;
-import me.mawood.data_api.objects.Device;
 import me.mawood.data_api.objects.Response;
 import me.mawood.data_api.sqlAbstraction.AccessorType;
 import me.mawood.data_api.sqlAbstraction.SQLDataAccessorFactory;
@@ -61,7 +60,7 @@ public class DataTypesController
     @RequestMapping(value="/{dataTypeTag}", method = {RequestMethod.DELETE})
     public Response delete(@PathVariable String dataTypeTag, HttpServletResponse response)
     {
-        logger.info("Called: DELETE /devices/");
+        logger.info("Called: DELETE /datatypes/");
         try
         {
             DataType dataType = dataTypeAccessor.getDataTypeFromTag(dataTypeTag);

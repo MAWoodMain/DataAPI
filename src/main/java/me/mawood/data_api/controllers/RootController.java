@@ -1,5 +1,6 @@
 package me.mawood.data_api.controllers;
 
+import io.swagger.annotations.ApiOperation;
 import me.mawood.data_api.objects.Message;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,6 +16,7 @@ public class RootController
     private static final Log logger = LogFactory.getLog(RootController.class);
 
     @RequestMapping(value="/", method = RequestMethod.GET)
+    @ApiOperation(value = "Hello World method", notes = "Includes a timestamp and a hello world message")
     public Message helloWorld(HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_OK);
         logger.info("Called: GET /");

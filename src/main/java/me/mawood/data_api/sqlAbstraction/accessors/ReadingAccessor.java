@@ -49,13 +49,13 @@ public class ReadingAccessor extends SQLDataAccessor
         {
             reading = new Reading();
             reading.setReading(resultSet.getDouble("reading"));
-            reading.setTimestamp(resultSet.getTimestamp("timestamp"));
+            reading.setTimestamp(resultSet.getTimestamp("timestamp").getTime());
             results.add(reading);
         }
         return results;
     }
 
-    public int insertReadings(Device device, DataType dataType, Collection<Reading> readings) throws SQLException
+    public int insertReadings(Device device, DataType dataType, Reading[] readings) throws SQLException
     {
         PreparedStatement ps = connection.prepareStatement("INSERT INTO " + READING_TABLE_NAME + "(deviceId, dataTypeId, reading, timestamp) VALUES (?,?,?,?)");
         for(Reading r:readings)
@@ -64,7 +64,7 @@ public class ReadingAccessor extends SQLDataAccessor
             ps.setLong(1, device.getId());
             ps.setLong(2,dataType.getDatatypeid());
             ps.setDouble(3,r.getReading());
-            ps.setTimestamp(4,r.getTimestamp());
+            ps.setTimestamp(4,new Timestamp(r.getTimestamp()));
             ps.addBatch();
         }
         int count = 0;

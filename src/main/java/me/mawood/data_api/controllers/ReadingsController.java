@@ -1,5 +1,6 @@
 package me.mawood.data_api.controllers;
 
+import io.swagger.annotations.ApiOperation;
 import me.mawood.data_api.objects.DataType;
 import me.mawood.data_api.objects.Device;
 import me.mawood.data_api.objects.Reading;
@@ -33,7 +34,8 @@ public class ReadingsController
     private static final Log logger = LogFactory.getLog(ReadingsController.class);
 
     @RequestMapping(value = "/{deviceTag}/{dataTypeTag}", method = RequestMethod.GET, produces = "application/json")
-    public Response readingGet(@PathVariable String deviceTag, @PathVariable String dataTypeTag,
+    @ApiOperation(value = "Gets readings by device tag", notes = "Optional time range in epoch millis")
+    public Response<Reading[]> readingGet(@PathVariable String deviceTag, @PathVariable String dataTypeTag,
                                @RequestParam(value = "start", required=false) Long start, @RequestParam(value = "end", required=false) Long end,
                                HttpServletResponse response)
     {
@@ -43,18 +45,20 @@ public class ReadingsController
             response.setStatus(HttpServletResponse.SC_OK);
             Device device = deviceAccessor.getDeviceFromTag(deviceTag);
             DataType dataType = dataTypeAccessor.getDataTypeFromTag(dataTypeTag);
-            return new Response<>(readingAccessor.getReadingsFor(device,dataType,start,end));
+            Collection<Reading> readings = readingAccessor.getReadingsFor(device,dataType,start,end);
+            return new Response<>(readings.toArray(new Reading[readings.size()]));
         } catch (Exception e)
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             logger.error(e);
-            return new Response(false, "SQL error");
+            return new Response<>(false, "SQL error");
         }
     }
 
     @RequestMapping(value = "/{deviceTag}/{dataTypeTag}", method = RequestMethod.POST, produces = "application/json")
+    @ApiOperation(value = "Submits readings by device tag", notes = "Optional time range in epoch millis")
     public Response readingPost(@PathVariable String deviceTag, @PathVariable String dataTypeTag,
-                                @RequestBody Collection<Reading> readings,
+                                @RequestBody Reading[] readings,
                                 HttpServletResponse response)
     {
         logger.info("Called: POST /device/"+deviceTag+"/"+dataTypeTag+"/");
@@ -64,7 +68,7 @@ public class ReadingsController
             Device device = deviceAccessor.getDeviceFromTag(deviceTag);
             DataType dataType = dataTypeAccessor.getDataTypeFromTag(dataTypeTag);
             int count = readingAccessor.insertReadings(device,dataType,readings);
-            return new Response<>(true,"Done, inserted " + count + " readings of " + readings.size());
+            return new Response<>(true,"Done, inserted " + count + " readings of " + readings.length);
         } catch (SQLException e)
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -74,7 +78,8 @@ public class ReadingsController
     }
 
     @RequestMapping(value = "/{deviceTag}/{dataTypeTag}", method = RequestMethod.DELETE, produces = "application/json")
-    public Response readingDelete(@PathVariable String deviceTag, @PathVariable String dataTypeTag,
+    @ApiOperation(value = "Deletes readings by device tag", notes = "Required time range in epoch millis")
+    public Response<String> readingDelete(@PathVariable String deviceTag, @PathVariable String dataTypeTag,
                                @RequestParam(value = "start") Long start, @RequestParam(value = "end") Long end,
                                HttpServletResponse response)
     {
@@ -90,7 +95,7 @@ public class ReadingsController
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             logger.error(e);
-            return new Response(false, "SQL error");
+            return new Response<>(false, "SQL error");
         }
     }
 }

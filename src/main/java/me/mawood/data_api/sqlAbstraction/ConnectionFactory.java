@@ -51,18 +51,28 @@ class ConnectionFactory
 
     public static Connection getInstance()
     {
-        if (connection == null)
+        int attempts = 0;
+        while(connection == null)
         {
             try
             {
+                attempts++;
                 Class.forName("com.mysql.jdbc.Driver");
                 connection = DriverManager.getConnection(
                         "jdbc:mysql://" + hostname + ":" + port + "/" + database,username,password);
             } catch (SQLException | ClassNotFoundException e)
             {
+                if (attempts > 20)
+                {
+                    logger.error("Giving up on sql after " + attempts + " attempts");
+                    System.exit(-1);
+                }
                 logger.error("Failed to open SQL connection.");
-                logger.error(e);
-                System.exit(-1);
+                logger.info("Trying again in 5 seconds");
+                try
+                {
+                    Thread.sleep(5000);
+                } catch (InterruptedException ignored){}
             }
         }
         return connection;

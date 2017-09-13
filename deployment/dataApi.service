@@ -1,0 +1,13 @@
+[Unit]
+Description=Data API, makes data in mysql accessible
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/DataAPI/build/
+SyslogIdentifier=DataAPI
+ExecStart=/bin/sh -c "exec sudo java -jar /opt/DataAPI/build/data_api-0.0.1-SNAPSHOT.jar"
+User=root
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

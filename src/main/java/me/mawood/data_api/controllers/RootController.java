@@ -1,10 +1,6 @@
 package me.mawood.data_api.controllers;
 
-import java.sql.SQLException;
-
 import me.mawood.data_api.objects.Message;
-import me.mawood.data_api.sqlAbstraction.SQLDataAccessor;
-import me.mawood.data_api.sqlAbstraction.SQLDataAccessorFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.bind.annotation.RequestMapping;

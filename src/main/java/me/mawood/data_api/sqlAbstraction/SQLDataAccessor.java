@@ -1,13 +1,6 @@
 package me.mawood.data_api.sqlAbstraction;
 
-import me.mawood.data_api.objects.DataType;
-import me.mawood.data_api.objects.Device;
-import me.mawood.data_api.objects.Reading;
-
 import java.sql.*;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * data_api
@@ -21,7 +14,7 @@ public class SQLDataAccessor
 
     protected final Connection connection;
 
-    public SQLDataAccessor()
+    protected SQLDataAccessor()
     {
         connection = ConnectionFactory.getInstance();
     }

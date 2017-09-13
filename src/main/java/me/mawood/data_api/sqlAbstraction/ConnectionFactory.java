@@ -13,19 +13,19 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * DataAPI - me.mawood.data_api.sqlAbstraction
- * Created by MattW at Corintech on 12/09/2017.
+ * data_api
+ * Created by Matthew Wood on 12/09/2017.
  */
-public class ConnectionFactory
+class ConnectionFactory
 {
     private static final Log logger = LogFactory.getLog(DevicesController.class);
 
     private static SQLDataAccessor sql = null;
-    private static String hostname;
-    private static int port;
-    private static String database;
-    private static String username;
-    private static String password;
+    private static final String hostname;
+    private static final int port;
+    private static final String database;
+    private static final String username;
+    private static final String password;
     private static Connection connection;
     static
     {

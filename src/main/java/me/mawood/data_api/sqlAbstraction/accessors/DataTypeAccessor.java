@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * DataAPI - me.mawood.data_api.sqlAbstraction
- * Created by MattW at Corintech on 12/09/2017.
+ * data_api
+ * Created by Matthew Wood on 12/09/2017.
  */
 public class DataTypeAccessor extends SQLDataAccessor
 {

@@ -5,11 +5,8 @@ import me.mawood.data_api.sqlAbstraction.accessors.DataTypeAccessor;
 import me.mawood.data_api.sqlAbstraction.accessors.DeviceAccessor;
 import me.mawood.data_api.sqlAbstraction.accessors.ReadingAccessor;
 
-import java.io.*;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * data_api

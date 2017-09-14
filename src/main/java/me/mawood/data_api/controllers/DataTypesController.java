@@ -80,4 +80,25 @@ public class DataTypesController
             return new Response(false, e.getMessage());
         }
     }
+
+    @RequestMapping(value="/{dataTypeTag}", method = {RequestMethod.GET})
+    public Response get(@PathVariable String dataTypeTag, HttpServletResponse response)
+    {
+        logger.debug("Called: GET /datatypes/" + dataTypeTag);
+        try
+        {
+            DataType device = dataTypeAccessor.getDataTypeFromTag(dataTypeTag);
+            return new Response<>(device);
+        } catch (SQLException e)
+        {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error(e);
+            return new Response(false, "SQL error");
+        } catch (IllegalArgumentException e)
+        {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error(e);
+            return new Response(false, e.getMessage());
+        }
+    }
 }

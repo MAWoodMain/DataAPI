@@ -51,4 +51,14 @@ public class Response<E>
     {
         return message;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Response{" +
+                "data=" + data +
+                ", succeeded=" + succeeded +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }

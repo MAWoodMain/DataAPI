@@ -63,12 +63,33 @@ public class DevicesController
     @RequestMapping(value="/{deviceTag}", method = {RequestMethod.DELETE})
     public Response delete(@PathVariable String deviceTag, HttpServletResponse response)
     {
-        logger.debug("Called: DELETE /devices/");
+        logger.debug("Called: DELETE /devices/" + deviceTag);
         try
         {
             Device device = deviceAccessor.getDeviceFromTag(deviceTag);
             deviceAccessor.delete(device);
             return new Response(true,"Deleted device successfully");
+        } catch (SQLException e)
+        {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error(e);
+            return new Response(false, "SQL error");
+        } catch (IllegalArgumentException e)
+        {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error(e);
+            return new Response(false, e.getMessage());
+        }
+    }
+
+    @RequestMapping(value="/{deviceTag}", method = {RequestMethod.GET})
+    public Response get(@PathVariable String deviceTag, HttpServletResponse response)
+    {
+        logger.debug("Called: GET /devices/" + deviceTag);
+        try
+        {
+            Device device = deviceAccessor.getDeviceFromTag(deviceTag);
+            return new Response<>(device);
         } catch (SQLException e)
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

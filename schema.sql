@@ -10,7 +10,7 @@ CREATE TABLE `devices` (
 CREATE TABLE `datatypes` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` varchar(25) NOT NULL,
-  `tag` varchar(25) NOT NULL,
+  `tag` varchar(25) NOT NULL UNIQUE,
   `symbol` varchar(5) NOT NULL,
   `description` TEXT,
   PRIMARY KEY (`id`)

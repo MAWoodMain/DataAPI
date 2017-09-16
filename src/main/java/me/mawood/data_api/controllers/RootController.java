@@ -17,7 +17,7 @@ public class RootController
 {
     private static final Log logger = LogFactory.getLog(RootController.class);
 
-    @RequestMapping(value="/", method = RequestMethod.GET)
+    @RequestMapping(value="/api/", method = RequestMethod.GET)
     @ApiOperation(value = "Hello World method", notes = "Includes a timestamp and a hello world message")
     public Message helloWorld(HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_OK);

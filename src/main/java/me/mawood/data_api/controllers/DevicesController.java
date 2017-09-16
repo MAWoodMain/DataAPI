@@ -20,7 +20,7 @@ import java.sql.SQLException;
 
 @RestController
 @Api(tags = "Devices")
-@RequestMapping("/devices")
+@RequestMapping("/api/devices")
 public class DevicesController
 {
     private static final DeviceAccessor deviceAccessor = (DeviceAccessor)SQLDataAccessorFactory.getInstance(AccessorType.DEVICE);

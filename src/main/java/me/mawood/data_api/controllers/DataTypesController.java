@@ -20,7 +20,7 @@ import java.sql.SQLException;
 
 @RestController
 @Api(tags = "Data Types")
-@RequestMapping("/datatypes")
+@RequestMapping("/api/datatypes")
 public class DataTypesController
 {
     private static final DataTypeAccessor dataTypeAccessor = (DataTypeAccessor)SQLDataAccessorFactory.getInstance(AccessorType.DATA_TYPE);

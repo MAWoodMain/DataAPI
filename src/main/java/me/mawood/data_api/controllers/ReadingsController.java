@@ -26,7 +26,7 @@ import java.util.Collection;
 
 @RestController
 @Api(tags = "Readings")
-@RequestMapping("/device")
+@RequestMapping("/api/device")
 public class ReadingsController
 {
     private static final DeviceAccessor deviceAccessor = (DeviceAccessor)SQLDataAccessorFactory.getInstance(AccessorType.DEVICE);
